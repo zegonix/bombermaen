@@ -46,10 +46,6 @@ public class View extends JFrame {
 	private JLabel mapsizeLabel;
 	private JLabel bombcountLabel;
 	private JLabel bombstrengthLabel;
-	private JLabel player1Label;
-	private JLabel player2Label;
-	private JLabel player3Label;
-	private JLabel player4Label;
 	private ImageButton mapPreviousButton;
 	private ImageButton mapNextButton;
 	private ImageButton mapSmallerButton;
@@ -58,6 +54,10 @@ public class View extends JFrame {
 	private ImageButton bombcountUpButton;
 	private ImageButton bombstrengthDownButton;
 	private ImageButton bombstrengthUpButton;
+	private JButton player1Button;
+	private JButton player2Button;
+	private JButton player3Button;
+	private JButton player4Button;
 	private JButton playButton;
 	private Display g;
 
@@ -76,6 +76,8 @@ public class View extends JFrame {
 
 	final private File arrow_left = new File("src\\res\\arrow_left.png");
 	final private File arrow_right = new File("src\\res\\arrow_right.png");
+	final private File player_button_unselected = new File("src\\res\\playerButtonUnselected.png");
+	final private File player_button_selected = new File("src\\res\\playerButtonSelected.png");
 
 	final private File file_wall = new File("src\\res\\wall.png");
 	final private File file_crate = new File("src\\res\\crate.png");
@@ -99,6 +101,8 @@ public class View extends JFrame {
 	// -- Images
 	private Image arrowLeft;
 	private Image arrowRight;
+	private Image playerButtonUnselected;
+	private Image playerButtonSelected;
 	private Image wall;
 	private Image crate;
 	private Image[] explosion = new Image[16];
@@ -558,10 +562,6 @@ public class View extends JFrame {
 		mapsizeLabel = new JLabel();
 		bombcountLabel = new JLabel();
 		bombstrengthLabel = new JLabel();
-		player1Label = new JLabel();
-		player2Label = new JLabel();
-		player3Label = new JLabel();
-		player4Label = new JLabel();
 		mapPreviousButton = new ImageButton(arrowLeft);
 		mapNextButton = new ImageButton(arrowRight);
 		mapSmallerButton = new ImageButton(arrowLeft);
@@ -570,6 +570,10 @@ public class View extends JFrame {
 		bombcountUpButton = new ImageButton(arrowRight);
 		bombstrengthDownButton = new ImageButton(arrowLeft);
 		bombstrengthUpButton = new ImageButton(arrowRight);
+		player1Button = new ImageButton(playerButtonUnselected);
+		player2Button = new ImageButton(playerButtonUnselected);
+		player3Button = new ImageButton(playerButtonUnselected);
+		player4Button = new ImageButton(playerButtonUnselected);
 		playButton = new JButton();
 		g = new Display(this.getWidth(), this.getHeight());
 
@@ -591,6 +595,8 @@ public class View extends JFrame {
 		try {
 			arrowLeft = ImageIO.read(arrow_left);
 			arrowRight = ImageIO.read(arrow_right);
+			playerButtonUnselected = ImageIO.read(player_button_unselected);
+			playerButtonSelected = ImageIO.read(player_button_selected);
 			wall = ImageIO.read(file_wall);
 			crate = ImageIO.read(file_crate);
 			explosion[0] = ImageIO.read(file_exp_0);

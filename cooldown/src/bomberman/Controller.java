@@ -248,6 +248,25 @@ public class Controller implements TimerListener, ModelListener {
 		}
 	}
 
+	class PlayerButtonListener implements ActionListener {
+
+		private int player;
+
+		public PlayerButtonListener(int player) {
+			super();
+			this.player = player;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if ((player >= 1) && (player <= 4)) {
+				parameters.playerselection = parameters.playerselection ^ (1 << (player - 1));
+				// TODO: insert statement to change according buttons image
+			}
+		}
+
+	}
+
 	@Override
 	public void timeElapsed() {
 		if (view.getGameState() == gameState.RUNNING) {

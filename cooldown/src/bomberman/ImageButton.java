@@ -14,10 +14,14 @@ public class ImageButton extends JButton {
 
 	public ImageButton() {
 		super();
+		setContentAreaFilled(false);
+		setBorderPainted(false);
 	}
 
 	public ImageButton(Image image) {
 		super();
+		setContentAreaFilled(false);
+		setBorderPainted(false);
 		this.image = image;
 	}
 
@@ -34,9 +38,6 @@ public class ImageButton extends JButton {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		setContentAreaFilled(false);
-		setBorderPainted(false);
-
 		g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 
