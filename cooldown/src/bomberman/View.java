@@ -358,7 +358,6 @@ public class View extends JFrame {
 		// configuration
 		mapPreviousButton.setBounds(mapPreviousX, mapPreviousY, mapPreviousWidth, mapPreviousHeight);
 		mapPreviousButton.setFocusable(true);
-		// mapPrevious.addActionListener();
 		add(mapPreviousButton);
 
 		/*-- Next --*/
@@ -370,14 +369,13 @@ public class View extends JFrame {
 		// configuration
 		mapNextButton.setBounds(mapNextX, mapNextY, mapNextWidth, mapNextHeight);
 		mapNextButton.setFocusable(true);
-		// mapNext.addActionListener();
 		add(mapNextButton);
 
 		/*-- Size --*/
 		// parameters
-		int mapsizeWidth = (int) (width * 0.25);
-		int mapsizeHeight = (int) (height * 0.04);
-		int mapsizeX = (int) ((width * 0.5) - 2.5 * (mapselWidth * 0.5));
+		int mapsizeWidth = mapselWidth;
+		int mapsizeHeight = mapselHeight;
+		int mapsizeX = mapselX;
 		int mapsizeY = (int) (height * 0.26);
 		// configuration
 		mapsizeLabel.setBounds(mapsizeX, mapsizeY, mapsizeWidth, mapsizeHeight);
@@ -415,14 +413,14 @@ public class View extends JFrame {
 		int bombcountWidth = mapselWidth;
 		int bombcountHeight = mapselHeight;
 		int bombcountX = (int) ((width * 0.5) + 0.5 * (bombcountWidth * 0.5));
-		int bombcountY = (int) (height * 0.19);
+		int bombcountY = mapselY;
 		// configuration
 		bombcountLabel.setBounds(bombcountX, bombcountY, bombcountWidth, bombcountHeight);
 		bombcountLabel.setFocusable(false);
 		bombcountLabel.setForeground(Color.BLACK);
 		bombcountLabel.setFont(font.deriveFont((float) (bombcountHeight * FONTSCALER)));
 		bombcountLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		bombcountLabel.setText("" + parameters.bombcount);
+		bombcountLabel.setText("" + bombcount);
 		add(bombcountLabel);
 
 		/*-- BombcountDown --*/
@@ -434,7 +432,6 @@ public class View extends JFrame {
 		// configuration
 		bombcountDownButton.setBounds(bombcountDownX, bombcountDownY, bombcountDownWidth, bombcountDownHeight);
 		bombcountDownButton.setFocusable(true);
-		bombcountDownButton.addActionListener(bombcountDownListener);
 		add(bombcountDownButton);
 
 		/*-- BombcountUp --*/
@@ -446,8 +443,45 @@ public class View extends JFrame {
 		// configuration
 		bombcountUpButton.setBounds(bombcountUpX, bombcountUpY, bombcountUpWidth, bombcountUpHeight);
 		bombcountUpButton.setFocusable(true);
-		bombcountUpButton.addActionListener(bombcountUpListener);
 		add(bombcountUpButton);
+
+		/*-- Bombstrength --*/
+		// parameters
+		int bombstrengthWidth = mapselWidth;
+		int bombstrengthHeight = mapselHeight;
+		int bombstrengthX = bombcountX;
+		int bombstrengthY = mapsizeY;
+		// configuration
+		bombstrengthLabel.setBounds(bombstrengthX, bombstrengthY, bombstrengthWidth, bombstrengthHeight);
+		bombstrengthLabel.setFocusable(false);
+		bombstrengthLabel.setForeground(Color.BLACK);
+		bombstrengthLabel.setFont(font.deriveFont((float) (bombstrengthHeight * FONTSCALER)));
+		bombstrengthLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		bombstrengthLabel.setText("" + bombstrength);
+		add(bombstrengthLabel);
+
+		/*-- BombstrengthDown --*/
+		// parameters
+		int bombstrengthDownWidth = (int) (bombstrengthHeight * 0.5);
+		int bombstrengthDownHeight = (int) (bombstrengthHeight * 1.0);
+		int bombstrengthDownX = (int) (bombstrengthX - 2.0 * bombstrengthDownWidth);
+		int bombstrengthDownY = (int) (bombstrengthY);
+		// configuration
+		bombstrengthDownButton.setBounds(bombstrengthDownX, bombstrengthDownY, bombstrengthDownWidth,
+				bombstrengthDownHeight);
+		bombstrengthDownButton.setFocusable(true);
+		add(bombstrengthDownButton);
+
+		/*-- BombstrengthUp --*/
+		// parameters
+		int bombstrengthUpWidth = (int) (bombstrengthHeight * 0.5);
+		int bombstrengthUpHeight = (int) (bombstrengthHeight * 1.0);
+		int bombstrengthUpX = (int) (bombstrengthX + bombstrengthWidth + 2.0 * bombstrengthUpWidth);
+		int bombstrengthUpY = (int) (bombstrengthY);
+		// configuration
+		bombstrengthUpButton.setBounds(bombstrengthUpX, bombstrengthUpY, bombstrengthUpWidth, bombstrengthUpHeight);
+		bombstrengthUpButton.setFocusable(true);
+		add(bombstrengthUpButton);
 
 		/*-- PLAY --*/
 		// parameters
@@ -492,7 +526,14 @@ public class View extends JFrame {
 			remove(mapsizeLabel);
 			remove(mapSmallerButton);
 			remove(mapBiggerButton);
+			remove(bombcountLabel);
+			remove(bombcountDownButton);
+			remove(bombcountUpButton);
+			remove(bombstrengthLabel);
+			remove(bombstrengthDownButton);
+			remove(bombstrengthUpButton);
 			remove(playButton);
+			repaint();
 		} catch (NullPointerException e) {
 			System.out.println("NullPointerException: " + e.getMessage());
 		}
@@ -501,14 +542,15 @@ public class View extends JFrame {
 	private void removeGamescreen() {
 		try {
 			remove(g);
+			repaint();
 		} catch (NullPointerException e) {
 			System.out.println("NullPointerException: " + e.getMessage());
 		}
 	}
 
 	/**
-	 * creates a new instance of all components contained by the JFrame !! call
-	 * this method only once !!
+	 * creates a new instance of all components contained by the JFrame !! call this
+	 * method only once !!
 	 */
 	private void initGUI() {
 		titleLabel = new JLabel();
@@ -531,8 +573,14 @@ public class View extends JFrame {
 		playButton = new JButton();
 		g = new Display(this.getWidth(), this.getHeight());
 
+		// mapPrevious.addActionListener();
+		// mapNext.addActionListener();
 		mapSmallerButton.addActionListener(mapSmallerListener);
 		mapBiggerButton.addActionListener(mapBiggerListener);
+		bombcountDownButton.addActionListener(bombcountDownListener);
+		bombcountUpButton.addActionListener(bombcountUpListener);
+		bombstrengthDownButton.addActionListener(bombstrengthDownListener);
+		bombstrengthUpButton.addActionListener(bombstrengthUpListener);
 		playButton.addActionListener(playButtonListener);
 	}
 

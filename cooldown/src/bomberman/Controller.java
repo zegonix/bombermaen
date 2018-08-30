@@ -230,7 +230,7 @@ public class Controller implements TimerListener, ModelListener {
 	class BombstrengthDownListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if (parameters.bombstrength > 2) {
+			if (parameters.bombstrength > 1) {
 				parameters.bombstrength--;
 				view.setBombstrength(parameters.bombstrength);
 			}
@@ -243,6 +243,7 @@ public class Controller implements TimerListener, ModelListener {
 			if (parameters.bombstrength < (parameters.size - 2)) {
 				parameters.bombstrength++;
 				view.setBombstrength(parameters.bombstrength);
+				System.out.println("HALP");
 			}
 		}
 	}
