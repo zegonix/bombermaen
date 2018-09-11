@@ -5,9 +5,11 @@ import java.util.Random;
 public class Model {
 
 	// -- Game Parameters
-	private final int chanceBombsize = 12;
-	private final int chanceBombPlus = 12;
-	private final int chanceTrigger = 0;
+	final private int CHANCE_BOMBSTRENGTH = 12;
+	final private int CHANCE_BOMBPLUS = 12;
+	final private int CHANCE_TRIGGERBOMB = 0;
+	final private int CHANCE_SHIELD = 5;
+	final private int CHANCE_EMP = 3;
 
 	// -- Variables
 	private ModelListener listener;
@@ -16,16 +18,11 @@ public class Model {
 	private final FieldType empty = new TypeEmpty();
 	private PlayerInfo[] stats = { new PlayerInfo(), new PlayerInfo(), new PlayerInfo(), new PlayerInfo() };
 
-	// -- Sounds
-	// File soundExplosion = new File("src\\res\\explosion.wav");
-	// File soundPlaceBomb = new File("src\\res\\placeBomb.wav");
-	// File soundGameStart = new File("src\\res\\gameStart.wav");
-
 	// Constructor
-	public Model(int rows, int bombcount, int bombstrength) {
+	public Model(int rows, int playerselection, int bombcount, int bombstrength) {
 		this.rows = rows;
 		arena = new FieldType[rows][rows];
-		buildArena(3);
+		buildArena(playerselection);
 
 		for (int i = 0; i < 4; i++) {
 			stats[i].bombnum = bombcount;
@@ -101,19 +98,23 @@ public class Model {
 					arena[i][j] = new TypeWall();
 				} else {
 					int chance = Const.getRandom(0, 100);
-					if (chance <= chanceBombsize) {
+					if (chance <= CHANCE_BOMBSTRENGTH) {
 						arena[i][j] = new TypeCrate(Const.ITEM_BOMBSIZE);
-					} else if (chance <= (chanceBombPlus + chanceBombsize)) {
+					} else if (chance <= (CHANCE_BOMBPLUS + CHANCE_BOMBSTRENGTH)) {
 						arena[i][j] = new TypeCrate(Const.ITEM_BOMB_PLUS);
-					} else if (chance <= (chanceTrigger + chanceBombPlus + chanceBombsize)) {
+					} else if (chance <= (CHANCE_TRIGGERBOMB + CHANCE_BOMBPLUS + CHANCE_BOMBSTRENGTH)) {
 						arena[i][j] = new TypeCrate(Const.ITEM_TRIGGER);
+					} else if (chance <= (CHANCE_SHIELD + CHANCE_TRIGGERBOMB + CHANCE_BOMBPLUS + CHANCE_BOMBSTRENGTH)) {
+						arena[i][j] = new TypeCrate(Const.ITEM_SHIELD);
+					} else if (chance <= (CHANCE_EMP + CHANCE_SHIELD + CHANCE_TRIGGERBOMB + CHANCE_BOMBPLUS
+							+ CHANCE_BOMBSTRENGTH)) {
+						arena[i][j] = new TypeCrate(Const.ITEM_EMP);
 					} else {
 						arena[i][j] = new TypeCrate();
 					}
 				}
 			}
 		}
-
 		placePlayers(players);
 	}
 
@@ -162,6 +163,9 @@ public class Model {
 						} else if (getField(nextpos).variant == Const.ITEM_BOMB_PLUS
 								&& stats[player].bombnum < rows - 2) {
 							stats[player].bombnum++;
+						} else if (getField(nextpos).variant >= Const.ITEM_SHIELD) {
+							stats[player].item = getField(nextpos).variant;
+							listener.itempickup(player, getField(nextpos).variant);
 						}
 					case Const.EMPTY:
 						deletePlayer(pos, player);
@@ -190,6 +194,16 @@ public class Model {
 				}
 			} else if (stats[player].bombtype == Const.TRIGGER_BOMB) {
 				// TODO: insert Triggerbomb
+			}
+		}
+	}
+
+	public void useItem(int player) {
+		if ((player >= 1) && (player <= 4)) {
+			switch (stats[player - 1].item) {
+			case Const.ITEM_SHIELD:
+				// TODO: stuff!!
+				break;
 			}
 		}
 	}

@@ -54,6 +54,8 @@ public final class Const {
 	final static int ITEM_BOMBSIZE = 1;
 	final static int ITEM_BOMB_PLUS = 2;
 	final static int ITEM_TRIGGER = 4;
+	final static int ITEM_SHIELD = 5;
+	final static int ITEM_EMP = 6;
 
 	// important explosion variants
 	final static int EXP_END_NORTH = 0b0001;

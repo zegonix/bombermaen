@@ -31,6 +31,8 @@ public class View extends JFrame {
 	// -- constants
 	final private double FONTSCALER = 0.92;
 	final private double FACTOR_MAX_FIELD_SIZE = 0.06;
+	final private int ITEM_OFFSET = Const.ITEM_SHIELD;
+	final private String[] ITEMS = { "shield", "emp" };
 
 	// -- variables
 	private gameState state = gameState.VOID;
@@ -46,6 +48,9 @@ public class View extends JFrame {
 	private JLabel mapsizeLabel;
 	private JLabel bombcountLabel;
 	private JLabel bombstrengthLabel;
+	private JLabel itemPlayer1Label;
+	private JLabel itemPlayer2Label;
+	private JLabel itemPlayer3Label;
 	private ImageButton mapPreviousButton;
 	private ImageButton mapNextButton;
 	private ImageButton mapSmallerButton;
@@ -54,10 +59,7 @@ public class View extends JFrame {
 	private ImageButton bombcountUpButton;
 	private ImageButton bombstrengthDownButton;
 	private ImageButton bombstrengthUpButton;
-	private JButton player1Button;
-	private JButton player2Button;
-	private JButton player3Button;
-	private JButton player4Button;
+	private ImageButton playerButtons[] = new ImageButton[4];
 	private JButton playButton;
 	private Display g;
 
@@ -69,6 +71,7 @@ public class View extends JFrame {
 	private ActionListener bombcountUpListener;
 	private ActionListener bombstrengthDownListener;
 	private ActionListener bombstrengthUpListener;
+	private ActionListener[] playerListeners = new ActionListener[4];
 	private ActionListener playButtonListener;
 
 	// -- files
@@ -112,7 +115,8 @@ public class View extends JFrame {
 	public View(GameParameters gameParameters, ActionListener smallerListener, ActionListener biggerListener,
 			ActionListener bombcountDownListener, ActionListener bombcountUpListener,
 			ActionListener bombstrengthDownListener, ActionListener bombstrengthUpListener,
-			ActionListener playListener) {
+			ActionListener player1Listener, ActionListener player2Listener, ActionListener player3Listener,
+			ActionListener player4Listener, ActionListener playListener) {
 
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screen.width, screen.height);
@@ -128,6 +132,10 @@ public class View extends JFrame {
 		this.bombcountUpListener = bombcountUpListener;
 		this.bombstrengthDownListener = bombstrengthDownListener;
 		this.bombstrengthUpListener = bombstrengthUpListener;
+		this.playerListeners[0] = player1Listener;
+		this.playerListeners[1] = player2Listener;
+		this.playerListeners[2] = player3Listener;
+		this.playerListeners[3] = player4Listener;
 		this.playButtonListener = playListener;
 
 		/*-- import and register custom font --*/
@@ -180,6 +188,21 @@ public class View extends JFrame {
 			bombstrengthLabel.setText("" + parameters.bombstrength);
 		}
 		repaint();
+	}
+
+	public void selectPlayer(int player, int select) {
+		if ((player >= 1) && (player <= 4)) {
+			Image selection;
+			if (select > 0) {
+				selection = playerButtonSelected;
+			} else {
+				selection = playerButtonUnselected;
+			}
+			playerButtons[player - 1].setImage(selection);
+			repaint();
+		} else {
+			System.out.println("bad player input (at selectPlayer)");
+		}
 	}
 
 	public gameState getGameState() {
@@ -254,6 +277,10 @@ public class View extends JFrame {
 
 			state = newState;
 		}
+	}
+
+	public void changeItem(int player, int itemNumber) {
+
 	}
 
 	public void showModel(FieldType[][] model) {
@@ -487,6 +514,27 @@ public class View extends JFrame {
 		bombstrengthUpButton.setFocusable(true);
 		add(bombstrengthUpButton);
 
+		/*-- PlayerButtons --*/
+		// parameters
+		int playerButtonWidth = (int) (width * 0.05);
+		int playerButtonX = (int) ((width - playerButtonWidth * 2.5) / 2);
+		int playerButtonY = (int) (height * 0.38);
+		// configuration
+		// player 1
+		playerButtons[0].setBounds((int) (playerButtonX + playerButtonWidth * 1.5),
+				(int) (playerButtonY + playerButtonWidth * 1.5), playerButtonWidth, playerButtonWidth);
+		playerButtons[0].setFocusable(true);
+		add(playerButtons[0]);
+		// player 2
+		playerButtons[1].setBounds(playerButtonX, playerButtonY, playerButtonWidth, playerButtonWidth);
+		playerButtons[1].setFocusable(true);
+		add(playerButtons[1]);
+		// player 3
+		playerButtons[2].setBounds((int) (playerButtonX + playerButtonWidth * 1.5), playerButtonY, playerButtonWidth,
+				playerButtonWidth);
+		playerButtons[2].setFocusable(true);
+		add(playerButtons[2]);
+
 		/*-- PLAY --*/
 		// parameters
 		int playWidth = (int) (width * 0.3);
@@ -514,11 +562,11 @@ public class View extends JFrame {
 		add(g);
 
 		fieldsize = (int) (this.getHeight() * 0.75 / parameters.size);
-		offsetX = (int) ((this.getWidth() - parameters.size * fieldsize) / 2);
-		offsetY = (int) ((this.getHeight() - parameters.size * fieldsize) / 2);
 		if (fieldsize > (int) (this.getHeight() * FACTOR_MAX_FIELD_SIZE)) {
 			fieldsize = (int) (this.getHeight() * FACTOR_MAX_FIELD_SIZE);
 		}
+		offsetX = (int) ((this.getWidth() - parameters.size * fieldsize) / 2);
+		offsetY = (int) ((this.getHeight() - parameters.size * fieldsize) / 2);
 	}
 
 	private void removeMainmenu() {
@@ -536,6 +584,9 @@ public class View extends JFrame {
 			remove(bombstrengthLabel);
 			remove(bombstrengthDownButton);
 			remove(bombstrengthUpButton);
+			remove(playerButtons[0]);
+			remove(playerButtons[1]);
+			remove(playerButtons[2]);
 			remove(playButton);
 			repaint();
 		} catch (NullPointerException e) {
@@ -562,6 +613,9 @@ public class View extends JFrame {
 		mapsizeLabel = new JLabel();
 		bombcountLabel = new JLabel();
 		bombstrengthLabel = new JLabel();
+		itemPlayer1Label = new JLabel();
+		itemPlayer2Label = new JLabel();
+		itemPlayer3Label = new JLabel();
 		mapPreviousButton = new ImageButton(arrowLeft);
 		mapNextButton = new ImageButton(arrowRight);
 		mapSmallerButton = new ImageButton(arrowLeft);
@@ -570,10 +624,10 @@ public class View extends JFrame {
 		bombcountUpButton = new ImageButton(arrowRight);
 		bombstrengthDownButton = new ImageButton(arrowLeft);
 		bombstrengthUpButton = new ImageButton(arrowRight);
-		player1Button = new ImageButton(playerButtonUnselected);
-		player2Button = new ImageButton(playerButtonUnselected);
-		player3Button = new ImageButton(playerButtonUnselected);
-		player4Button = new ImageButton(playerButtonUnselected);
+		playerButtons[0] = new ImageButton(playerButtonSelected);
+		playerButtons[1] = new ImageButton(playerButtonSelected);
+		playerButtons[2] = new ImageButton(playerButtonUnselected);
+		playerButtons[3] = new ImageButton(playerButtonUnselected);
 		playButton = new JButton();
 		g = new Display(this.getWidth(), this.getHeight());
 
@@ -585,6 +639,10 @@ public class View extends JFrame {
 		bombcountUpButton.addActionListener(bombcountUpListener);
 		bombstrengthDownButton.addActionListener(bombstrengthDownListener);
 		bombstrengthUpButton.addActionListener(bombstrengthUpListener);
+		playerButtons[0].addActionListener(playerListeners[0]);
+		playerButtons[1].addActionListener(playerListeners[1]);
+		playerButtons[2].addActionListener(playerListeners[2]);
+		playerButtons[3].addActionListener(playerListeners[3]);
 		playButton.addActionListener(playButtonListener);
 	}
 

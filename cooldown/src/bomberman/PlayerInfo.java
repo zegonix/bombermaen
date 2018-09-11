@@ -7,6 +7,7 @@ public class PlayerInfo {
 	public int bombtype;
 	public int bombsize; // explosion range
 	public int bombnum; // number of bombs the player may place
+	public int item;
 
 	public PlayerInfo() {
 		pos = new Coordinate(0, 0);
@@ -14,6 +15,7 @@ public class PlayerInfo {
 		bombtype = Const.NORMAL_BOMB;
 		bombsize = 2;
 		bombnum = 1;
+		item = -1;
 	}
 
 }

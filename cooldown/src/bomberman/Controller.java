@@ -43,7 +43,8 @@ public class Controller implements TimerListener, ModelListener {
 				DEFAULT_PLAYERSELECTION);
 		view = new View(parameters, new MapSmallerListener(), new MapBiggerListener(), new BombcountDownListener(),
 				new BombcountUpListener(), new BombstrengthDownListener(), new BombstrengthUpListener(),
-				new PlayButtonListener());
+				new PlayerButtonListener(1), new PlayerButtonListener(2), new PlayerButtonListener(3),
+				new PlayerButtonListener(4), new PlayButtonListener());
 		view.addKeyAdapter(new GameKeyListener());
 		timer.start();
 	}
@@ -167,7 +168,8 @@ public class Controller implements TimerListener, ModelListener {
 	class PlayButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			model = new Model(parameters.size, parameters.bombcount, parameters.bombstrength);
+			model = new Model(parameters.size, parameters.playerselection, parameters.bombcount,
+					parameters.bombstrength);
 			addListenerToModel();
 			view.changeGameState(gameState.RUNNING);
 		}
@@ -243,7 +245,6 @@ public class Controller implements TimerListener, ModelListener {
 			if (parameters.bombstrength < (parameters.size - 2)) {
 				parameters.bombstrength++;
 				view.setBombstrength(parameters.bombstrength);
-				System.out.println("HALP");
 			}
 		}
 	}
@@ -261,7 +262,8 @@ public class Controller implements TimerListener, ModelListener {
 		public void actionPerformed(ActionEvent e) {
 			if ((player >= 1) && (player <= 4)) {
 				parameters.playerselection = parameters.playerselection ^ (1 << (player - 1));
-				// TODO: insert statement to change according buttons image
+				int selection = parameters.playerselection & (1 << (player - 1));
+				view.selectPlayer(player, selection);
 			}
 		}
 
@@ -277,6 +279,11 @@ public class Controller implements TimerListener, ModelListener {
 	@Override
 	public void gameover(int winner) {
 		view.changeGameState(gameState.MENU);
+	}
+
+	@Override
+	public void itempickup(int player, int itemNumber) {
+		// TODO: ..
 	}
 
 }
